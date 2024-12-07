@@ -26,7 +26,7 @@ int main() {
     int gameOver = 0;
     int highScore = loadHighScore(HIGH_SCORE_FILE);
     char input;
-
+//heheh
     srand(time(0));          // Initialize random seed
     initscr();               // Start ncurses mode
     noecho();                // Disable input echoing
