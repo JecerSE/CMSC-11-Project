@@ -8,7 +8,7 @@
 #define HIGH_SCORE_FILE "highscore.txt"
 #define BASKET_MOVE_STEP 3  // The basket moves 3 spaces per tick
 #define BASKET_WIDTH 5      // The basket's holding range is now 5
-
+//heheh
 typedef struct {
     int x, y;
     int speed; // Speed in milliseconds
