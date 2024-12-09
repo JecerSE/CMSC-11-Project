@@ -90,11 +90,11 @@ void loadingScreen() {
 
 void draw(Fruit fruit, int basketX, int score, int highScore) {
     // Draw the fruit
-    mvprintw(fruit.y, fruit.x, "([*])");
+    mvprintw(fruit.y, fruit.x, "*");
 
     // Draw the basket
     for (int i = 0; i < BASKET_WIDTH; i++) {
-        mvprintw(HEIGHT - 1, basketX + i, "V");
+        mvprintw(HEIGHT - 1, basketX + i, "_");
     }
 
     // Draw the score and high score
