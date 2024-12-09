@@ -71,6 +71,22 @@ int main() {
     printf("High Score: %d\n", highScore);
     return 0;
 }
+void displayMenu() {
+    clear();
+    mvprintw(HEIGHT / 2 - 2, (WIDTH - 14) / 2, "Fruit Catcher");
+    mvprintw(HEIGHT / 2, (WIDTH - 28) / 2, "Press any key to start the game");
+    mvprintw(HEIGHT / 2 + 2, (WIDTH - 38) / 2, "Controls: 'a'/'LEFT' (left), 'd'/'RIGHT' (right)");
+    mvprintw(HEIGHT / 2 + 3, (WIDTH - 21) / 2, "'q' to quit the game");
+    refresh();
+    getch();
+}
+
+void loadingScreen() {
+    clear();
+    mvprintw(HEIGHT / 2, (WIDTH - 13) / 2, "Loading...");
+    refresh();
+    sleep(5);  // Pause for 5 seconds
+}
 
 void draw(Fruit fruit, int basketX, int score, int highScore) {
     // Draw the fruit
