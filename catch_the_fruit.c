@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <ncurses.h>
+#include <ncurses/ncurses.h>
 
 #define WIDTH 30
 #define HEIGHT 15
@@ -85,7 +85,7 @@ void loadingScreen() {
     clear();
     mvprintw(HEIGHT / 2, (WIDTH - 13) / 2, "Loading...");
     refresh();
-    sleep(5);  // Pause for 5 seconds
+    _sleep(5);  // Pause for 5 seconds
 }
 
 void draw(Fruit fruit, int basketX, int score, int highScore) {
