@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <ncurses.h>
+#include <ncurses/ncurses.h>
+#include <unistd.h>
 
 #define WIDTH 30
 #define HEIGHT 15

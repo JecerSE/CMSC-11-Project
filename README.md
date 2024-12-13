@@ -13,13 +13,10 @@ Currently tested to work on mac supporting windows soon.
 
 # Instructions For PC
 
-> 1. Install MinGW and ncurses
+> 1. Install MinGW
 > 2. Download MinGW: https://sourceforge.net/projects/mingw/
-> 3. Install ncurses for Windows:
-  Use a precompiled library like pdcurses (a Windows-compatible version of ncurses).
-  Download: https://pdcurses.org/
-> 4. Compile The Program By Opening Windows Terminal : gcc -o fruit_game.exe fruit_game.c -lpdcurses
-> 5. Run The Executive Program
+> 3. Compile The Program By Opening Windows Terminal : `gcc catch_the_fruit.c -o catch_the_fruit.exe -lpdcurses -DNCURSES_STATIC` (*Credit to https://stackoverflow.com/a/75704765*)
+> 4. Run The Executive Program
 
 # How To Play the Game?
 
