@@ -8,7 +8,7 @@ Currently tested to work on mac supporting windows soon.
 > 1. Download Xcode Command Line Tools or Homebrew for ncurses
 > 2. Place in a folder with everything inside
 > 3. Run In Terminal With the Folder
-> 4. type in "clang -o catch_the_fruit catch_the_fruit.c -lncurses"
+> 4. type in `clang -o catch_the_fruit catch_the_fruit.c -lncurses`
 > 5. Enjoy the Game
 
 # Instructions For PC
