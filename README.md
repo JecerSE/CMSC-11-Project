@@ -1,9 +1,11 @@
 # CMSC-11-Project (Catch The Fruit)
-Game Project For Sir Gabriel Awatin, a Console game called catch the fruit, 
+Game Project For Sir Gabriel Awatin, a Console game called catch the fruit
+=======================================================================================
 Both PlatForms Are now Supported!
 
 **If Both Execetuables Don't Work During Your Download Refer To The Instructions Below**
 
+=======================================================================================
 ## Instructions For Mac
 
 > 1. Download Xcode Command Line Tools or Homebrew for ncurses
