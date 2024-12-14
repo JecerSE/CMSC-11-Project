@@ -39,7 +39,6 @@ int main() {
     int score = 0;
     int gameOver = 0;
     int highScore = loadHighScore(HIGH_SCORE_FILE);
-    char input;
     int input;
 
     srand(time(0));          // Initialize random seed
