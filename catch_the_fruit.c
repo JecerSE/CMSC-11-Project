@@ -55,58 +55,80 @@ int main() {
     fruit.y = 0;
     fruit.speed = 200 + rand() % 300; // Random speed between 200-500 ms
 
-    while (!gameOver) {
-        clear();             // Clear the screen
-        draw(fruit, basketX, score, highScore);
+    while (1) {
+        while (!gameOver) {
+            clear();             // Clear the screen
+            draw(fruit, basketX, score, highScore);
 
-        // Handle input
-        timeout(fruit.speed);  // Set the input timeout to the fruit's speed
-        input = getch();
-        if (input == 'a' || input == KEY_LEFT) {
-            if (basketX > 0) basketX -= BASKET_MOVE_STEP;
-            if (basketX < 0) basketX = 0; // Prevent moving out of bounds
-        } else if (input == 'd' || input == KEY_RIGHT) {
-            if (basketX < WIDTH - BASKET_WIDTH) basketX += BASKET_MOVE_STEP;
-            if (basketX > WIDTH - BASKET_WIDTH) basketX = WIDTH - BASKET_WIDTH; // Prevent moving out of bounds
-        } else if (input == 'q') {
-            break;          // Quit the game
+            // Handle input
+            timeout(fruit.speed);  // Set the input timeout to the fruit's speed
+            input = getch();
+            if (input == 'a' || input == KEY_LEFT) {
+                if (basketX > 0) basketX -= BASKET_MOVE_STEP;
+                if (basketX < 0) basketX = 0; // Prevent moving out of bounds
+            } else if (input == 'd' || input == KEY_RIGHT) {
+                if (basketX < WIDTH - BASKET_WIDTH) basketX += BASKET_MOVE_STEP;
+                if (basketX > WIDTH - BASKET_WIDTH) basketX = WIDTH - BASKET_WIDTH; // Prevent moving out of bounds
+            } else if (input == 'q') {
+                endwin();
+                return 0;          // Quit the game
+            }
+
+            // Update fruit and game state
+            updateFruit(&fruit, basketX, &score, &gameOver);
         }
 
-        // Update fruit and game state
-        updateFruit(&fruit, basketX, &score, &gameOver);
+        // Check if the score qualifies for leaderboard
+        LeaderboardEntry entries[MAX_LEADERBOARD_ENTRIES];
+        int count = 0;
+
+        FILE *file = fopen(LEADERBOARD_FILE, "r");
+        if (file) {
+            while (fscanf(file, "%s %d", entries[count].name, &entries[count].score) == 2) {
+                count++;
+                if (count >= MAX_LEADERBOARD_ENTRIES) break;
+            }
+            fclose(file);
+        }
+
+        int qualifiesForLeaderboard = (count < MAX_LEADERBOARD_ENTRIES || score > entries[count - 1].score);
+
+        // Display game over screen
+        displayGameOver(score, highScore, qualifiesForLeaderboard);
+
+        if (qualifiesForLeaderboard) {
+            char name[MAX_NAME_LENGTH];
+            inputName(name, MAX_NAME_LENGTH);
+            updateLeaderboard(LEADERBOARD_FILE, name, score);
+            displayLeaderboard(LEADERBOARD_FILE);
+        }
+
+        // Ask the player if they want to try again or quit
+        mvprintw(HEIGHT / 2 + 5, (WIDTH - 25) / 2, "Press 'p' to play again or 'q' to quit.");
+        refresh();
+
+        while (1) {
+            input = getch();
+            if (input == 'p') {
+                // Reset game variables
+                score = 0;
+                gameOver = 0;
+                basketX = WIDTH / 2;
+                fruit.x = rand() % WIDTH;
+                fruit.y = 0;
+                fruit.speed = 200 + rand() % 300;
+                break;
+            } else if (input == 'q') {
+                endwin();
+                return 0;
+            }
+        }
     }
 
-    // Check and save the high score
-    if (score > highScore) {
-        highScore = score;
-        saveHighScore(HIGH_SCORE_FILE, highScore);
-    }
-
-    // Display game over screen and handle leaderboard
-    displayGameOver(score, highScore);
-
-    char name[MAX_NAME_LENGTH];
-    inputName(name, MAX_NAME_LENGTH);
-    updateLeaderboard(LEADERBOARD_FILE, name, score);
-
-    // Display the updated leaderboard
-    clear();
-    mvprintw(0, (WIDTH - 10) / 2, "LEADERBOARD");
-    displayLeaderboard(LEADERBOARD_FILE);
-
-    // Display credits
-    mvprintw(HEIGHT + 3, 0, "Credits:");
-    mvprintw(HEIGHT + 4, 0, "Jecer Egagamao");
-    mvprintw(HEIGHT + 5, 0, "Maxwell Morales");
-    mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
-
-    refresh();
-    getch();
-
-    // End ncurses mode
     endwin();
     return 0;
 }
+
 
 void displayMenu() {
     clear();
@@ -170,17 +192,27 @@ void saveHighScore(const char *filename, int highScore) {
     }
 }
 
-void displayGameOver(int score, int highScore) {
+void displayGameOver(int score, int highScore, int qualifiesForLeaderboard) {
     clear();
     mvprintw(HEIGHT / 2 - 2, (WIDTH - 9) / 2, "GAME OVER");
     mvprintw(HEIGHT / 2, (WIDTH - 19) / 2, "Your final score: %d", score);
     mvprintw(HEIGHT / 2 + 1, (WIDTH - 13) / 2, "High Score: %d", highScore);
 
-    // Display credits in small font at the bottom
+    if (qualifiesForLeaderboard) {
+        mvprintw(HEIGHT / 2 + 2, (WIDTH - 25) / 2, "Congratulations! You're in the top 10!");
+    }
+
     mvprintw(HEIGHT + 3, 0, "Credits:");
     mvprintw(HEIGHT + 4, 0, "Jecer Egagamao");
     mvprintw(HEIGHT + 5, 0, "Maxwell Morales");
     mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
+
+    if (qualifiesForLeaderboard) {
+        mvprintw(HEIGHT / 2 + 4, (WIDTH - 40) / 2, "Enter your name and press Enter: ");
+        refresh();
+    } else {
+        mvprintw(HEIGHT / 2 + 3, (WIDTH - 25) / 2, "Press 'p' to play again or 'q' to quit.");
+    }
 
     refresh();
 }
