@@ -2,7 +2,7 @@
 Game Project For Sir Gabriel Awatin, a Console game called catch the fruit, 
 Both PlatForms Are now Supported!
 
-# If Both Execetuables Don't Work During Your Download Refer To The Instructions Below
+**If Both Execetuables Don't Work During Your Download Refer To The Instructions Below**
 
 ## Instructions For Mac
 
