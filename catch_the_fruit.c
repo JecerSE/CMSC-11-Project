@@ -1,18 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <ncurses.h>
 
 #define WIDTH 30
 #define HEIGHT 15
 #define HIGH_SCORE_FILE "highscore.txt"
+#define LEADERBOARD_FILE "leaderboard.txt"
 #define BASKET_MOVE_STEP 3  // The basket moves 3 spaces per tick
 #define BASKET_WIDTH 5      // The basket's holding range is now 5
+#define MAX_NAME_LENGTH 20
+#define MAX_LEADERBOARD_ENTRIES 10
 
 typedef struct {
     int x, y;
     int speed; // Speed in milliseconds
 } Fruit;
+
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    int score;
+} LeaderboardEntry;
 
 void draw(Fruit fruit, int basketX, int score, int highScore);
 void updateFruit(Fruit *fruit, int basketX, int *score, int *gameOver);
@@ -20,6 +29,9 @@ int loadHighScore(const char *filename);
 void saveHighScore(const char *filename, int highScore);
 void displayMenu();
 void displayGameOver(int score, int highScore);
+void inputName(char *name, int maxLength);
+void updateLeaderboard(const char *filename, const char *name, int score);
+void displayLeaderboard(const char *filename);
 
 int main() {
     Fruit fruit;
@@ -70,8 +82,26 @@ int main() {
         saveHighScore(HIGH_SCORE_FILE, highScore);
     }
 
-    // Display game over screen
+    // Display game over screen and handle leaderboard
     displayGameOver(score, highScore);
+
+    char name[MAX_NAME_LENGTH];
+    inputName(name, MAX_NAME_LENGTH);
+    updateLeaderboard(LEADERBOARD_FILE, name, score);
+
+    // Display the updated leaderboard
+    clear();
+    mvprintw(0, (WIDTH - 10) / 2, "LEADERBOARD");
+    displayLeaderboard(LEADERBOARD_FILE);
+
+    // Display credits
+    mvprintw(HEIGHT + 3, 0, "Credits:");
+    mvprintw(HEIGHT + 4, 0, "Jecer Egagamao");
+    mvprintw(HEIGHT + 5, 0, "Maxwell Morales");
+    mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
+
+    refresh();
+    getch();
 
     // End ncurses mode
     endwin();
@@ -153,5 +183,76 @@ void displayGameOver(int score, int highScore) {
     mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
 
     refresh();
-    getch();
+}
+
+void inputName(char *name, int maxLength) {
+    echo();  // Enable input echoing
+    curs_set(1);  // Show the cursor
+
+    mvprintw(HEIGHT / 2 + 2, (WIDTH - 25) / 2, "Enter your name: ");
+    getnstr(name, maxLength - 1);
+
+    noecho();  // Disable input echoing
+    curs_set(0);  // Hide the cursor
+}
+
+void updateLeaderboard(const char *filename, const char *name, int score) {
+    LeaderboardEntry entries[MAX_LEADERBOARD_ENTRIES];
+    int count = 0;
+
+    // Load existing leaderboard
+
+    FILE *file = fopen(filename, "r");
+    if (file) {
+        while (fscanf(file, "%s %d", entries[count].name, &entries[count].score) == 2) {
+            count++;
+            if (count >= MAX_LEADERBOARD_ENTRIES) break;
+        }
+        fclose(file);
+    }
+
+    // Add the new score to the leaderboard
+    if (count < MAX_LEADERBOARD_ENTRIES || score > entries[count - 1].score) {
+        strncpy(entries[count].name, name, MAX_NAME_LENGTH - 1);
+        entries[count].name[MAX_NAME_LENGTH - 1] = '\0'; // Ensure null termination
+        entries[count].score = score;
+        count++;
+    }
+
+    // Sort the leaderboard by score (descending)
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (entries[j].score < entries[j + 1].score) {
+                LeaderboardEntry temp = entries[j];
+                entries[j] = entries[j + 1];
+                entries[j + 1] = temp;
+            }
+        }
+    }
+
+    // Write the updated leaderboard back to the file
+    file = fopen(filename, "w");
+    if (file) {
+        for (int i = 0; i < count && i < MAX_LEADERBOARD_ENTRIES; i++) {
+            fprintf(file, "%s %d\n", entries[i].name, entries[i].score);
+        }
+        fclose(file);
+    }
+}
+
+void displayLeaderboard(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        mvprintw(2, (WIDTH - 25) / 2, "No leaderboard data available.");
+        return;
+    }
+
+    LeaderboardEntry entry;
+    int row = 2;
+
+    while (fscanf(file, "%s %d", entry.name, &entry.score) == 2) {
+        mvprintw(row++, (WIDTH - 25) / 2, "%s - %d", entry.name, entry.score);
+    }
+
+    fclose(file);
 }
