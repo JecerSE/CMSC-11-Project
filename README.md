@@ -1,7 +1,8 @@
 # CMSC-11-Project (Catch The Fruit)
 Game Project For Sir Gabriel Awatin, a Console game called catch the fruit, 
-Currently tested to work on mac supporting windows soon.
+Both PlatForms Are now Supported!
 
+# If Both Execetuables Don't Work Durin Your Download Refer To The Instructions Below
 
 # Instructions For Mac
 
