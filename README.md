@@ -22,6 +22,6 @@ Both PlatForms Are now Supported!
 
 Enjoy
 CS Bois From Computer Science SRP
-  Jecer 
-  Gian
-  Maxwell
+>  `Jecer `
+>  `Gian`
+>  `Maxwell`
