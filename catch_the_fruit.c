@@ -18,21 +18,8 @@ void draw(Fruit fruit, int basketX, int score, int highScore);
 void updateFruit(Fruit *fruit, int basketX, int *score, int *gameOver);
 int loadHighScore(const char *filename);
 void saveHighScore(const char *filename, int highScore);
-void displayMenu(){
-    clear();
-    
-    // Large title
-    mvprintw(HEIGHT / 2 - 5, (WIDTH - 5) / 2, "CATCH");
-    mvprintw(HEIGHT / 2 - 3, (WIDTH - 3) / 2, "THE");
-    mvprintw(HEIGHT / 2 - 1, (WIDTH - 5) / 2, "FRUIT");
-    
-    // Prompt to start
-    mvprintw(HEIGHT / 2 + 3, (WIDTH - 21) / 2, "Press any key to enter");
-    
-    refresh();
-    getch();
-}
-;
+void displayMenu();
+void displayGameOver(int score, int highScore);
 
 int main() {
     Fruit fruit;
@@ -83,11 +70,22 @@ int main() {
         saveHighScore(HIGH_SCORE_FILE, highScore);
     }
 
+    // Display game over screen
+    displayGameOver(score, highScore);
+
     // End ncurses mode
     endwin();
-    printf("Game Over! Your final score: %d\n", score);
-    printf("High Score: %d\n", highScore);
     return 0;
+}
+
+void displayMenu() {
+    clear();
+    mvprintw(HEIGHT / 2 - 5, (WIDTH - 5) / 2, "CATCH");
+    mvprintw(HEIGHT / 2 - 3, (WIDTH - 3) / 2, "THE");
+    mvprintw(HEIGHT / 2 - 1, (WIDTH - 5) / 2, "FRUIT");
+    mvprintw(HEIGHT / 2 + 3, (WIDTH - 21) / 2, "Press any key to enter");
+    refresh();
+    getch();
 }
 
 void draw(Fruit fruit, int basketX, int score, int highScore) {
@@ -140,4 +138,20 @@ void saveHighScore(const char *filename, int highScore) {
         fprintf(file, "%d", highScore);
         fclose(file);
     }
+}
+
+void displayGameOver(int score, int highScore) {
+    clear();
+    mvprintw(HEIGHT / 2 - 2, (WIDTH - 9) / 2, "GAME OVER");
+    mvprintw(HEIGHT / 2, (WIDTH - 19) / 2, "Your final score: %d", score);
+    mvprintw(HEIGHT / 2 + 1, (WIDTH - 13) / 2, "High Score: %d", highScore);
+
+    // Display credits in small font at the bottom
+    mvprintw(HEIGHT + 3, 0, "Credits:");
+    mvprintw(HEIGHT + 4, 0, "Jecer Egagamao");
+    mvprintw(HEIGHT + 5, 0, "Maxwell Morales");
+    mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
+
+    refresh();
+    getch();
 }
