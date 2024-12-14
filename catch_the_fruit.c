@@ -1,15 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <ncurses/ncurses.h>
-#include <unistd.h>
+#include <ncurses.h>
 
 #define WIDTH 30
 #define HEIGHT 15
 #define HIGH_SCORE_FILE "highscore.txt"
 #define BASKET_MOVE_STEP 3  // The basket moves 3 spaces per tick
 #define BASKET_WIDTH 5      // The basket's holding range is now 5
-//heheh
+
 typedef struct {
     int x, y;
     int speed; // Speed in milliseconds
@@ -19,6 +18,21 @@ void draw(Fruit fruit, int basketX, int score, int highScore);
 void updateFruit(Fruit *fruit, int basketX, int *score, int *gameOver);
 int loadHighScore(const char *filename);
 void saveHighScore(const char *filename, int highScore);
+void displayMenu(){
+    clear();
+    
+    // Large title
+    mvprintw(HEIGHT / 2 - 5, (WIDTH - 5) / 2, "CATCH");
+    mvprintw(HEIGHT / 2 - 3, (WIDTH - 3) / 2, "THE");
+    mvprintw(HEIGHT / 2 - 1, (WIDTH - 5) / 2, "FRUIT");
+    
+    // Prompt to start
+    mvprintw(HEIGHT / 2 + 3, (WIDTH - 21) / 2, "Press any key to enter");
+    
+    refresh();
+    getch();
+}
+;
 
 int main() {
     Fruit fruit;
@@ -33,6 +47,9 @@ int main() {
     noecho();                // Disable input echoing
     curs_set(0);             // Hide the cursor
     keypad(stdscr, TRUE);    // Enable arrow keys
+
+    // Display the menu screen
+    displayMenu();
 
     // Initialize the fruit
     fruit.x = rand() % WIDTH;
@@ -72,6 +89,7 @@ int main() {
     printf("High Score: %d\n", highScore);
     return 0;
 }
+
 void displayMenu() {
     clear();
     mvprintw(HEIGHT / 2 - 2, (WIDTH - 14) / 2, "Fruit Catcher");
@@ -80,13 +98,6 @@ void displayMenu() {
     mvprintw(HEIGHT / 2 + 3, (WIDTH - 21) / 2, "'q' to quit the game");
     refresh();
     getch();
-}
-
-void loadingScreen() {
-    clear();
-    mvprintw(HEIGHT / 2, (WIDTH - 13) / 2, "Loading...");
-    refresh();
-    sleep(5);  // Pause for 5 seconds
 }
 
 void draw(Fruit fruit, int basketX, int score, int highScore) {
