@@ -15,7 +15,7 @@ Currently tested to work on mac supporting windows soon.
 
 > 1. Install MinGW
 > 2. Download MinGW: https://sourceforge.net/projects/mingw/
-> 3. Compile The Program By Opening Windows Terminal : `gcc catch_the_fruit.c -o catch_the_fruit.exe -lpdcurses -DNCURSES_STATIC` (*Credit to https://stackoverflow.com/a/75704765*)
+> 3. Compile The Program By Opening Windows Terminal : `gcc catch_the_fruit.c -o catch_the_fruit.exe -lncurses -DNCURSES_STATIC` (*Credit to https://stackoverflow.com/a/75704765*)
 > 5. Run The Executive Program
 
 # How To Play the Game?
