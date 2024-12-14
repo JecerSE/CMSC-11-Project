@@ -28,7 +28,7 @@ void updateFruit(Fruit *fruit, int basketX, int *score, int *gameOver);
 int loadHighScore(const char *filename);
 void saveHighScore(const char *filename, int highScore);
 void displayMenu();
-void displayGameOver(int score, int highScore);
+void displayGameOver(int score, int highScore, int qualifiesForLeaderboard);
 void inputName(char *name, int maxLength);
 void updateLeaderboard(const char *filename, const char *name, int score);
 void displayLeaderboard(const char *filename);
@@ -40,6 +40,7 @@ int main() {
     int gameOver = 0;
     int highScore = loadHighScore(HIGH_SCORE_FILE);
     char input;
+    int input;
 
     srand(time(0));          // Initialize random seed
     initscr();               // Start ncurses mode
@@ -100,6 +101,7 @@ int main() {
             char name[MAX_NAME_LENGTH];
             inputName(name, MAX_NAME_LENGTH);
             updateLeaderboard(LEADERBOARD_FILE, name, score);
+            clear();
             displayLeaderboard(LEADERBOARD_FILE);
         }
 
@@ -128,6 +130,7 @@ int main() {
     endwin();
     return 0;
 }
+
 
 
 void displayMenu() {
@@ -200,19 +203,15 @@ void displayGameOver(int score, int highScore, int qualifiesForLeaderboard) {
 
     if (qualifiesForLeaderboard) {
         mvprintw(HEIGHT / 2 + 2, (WIDTH - 25) / 2, "Congratulations! You're in the top 10!");
+        mvprintw(HEIGHT / 2 + 4, (WIDTH - 40) / 2, "Enter your name and press Enter: ");
+    } else {
+        mvprintw(HEIGHT / 2 + 3, (WIDTH - 25) / 2, "Press 'p' to play again or 'q' to quit.");
     }
 
     mvprintw(HEIGHT + 3, 0, "Credits:");
     mvprintw(HEIGHT + 4, 0, "Jecer Egagamao");
     mvprintw(HEIGHT + 5, 0, "Maxwell Morales");
     mvprintw(HEIGHT + 6, 0, "Gian De La Cruz");
-
-    if (qualifiesForLeaderboard) {
-        mvprintw(HEIGHT / 2 + 4, (WIDTH - 40) / 2, "Enter your name and press Enter: ");
-        refresh();
-    } else {
-        mvprintw(HEIGHT / 2 + 3, (WIDTH - 25) / 2, "Press 'p' to play again or 'q' to quit.");
-    }
 
     refresh();
 }
